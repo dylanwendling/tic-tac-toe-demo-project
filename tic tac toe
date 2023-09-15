@@ -1,0 +1,194 @@
+#include<iostream>
+#include<stdlib.h>
+#include<vector>
+using namespace std;
+
+/* Declare all of required things global, So no need to pass to any function and easy to access */
+
+char square[10] = {'o','a','b','c','d','e','f','g','h','i'};
+char symbol[3];
+string playername[3];
+const bool CLEAR_SCREEN = true;
+class TTTBoard {
+
+public:
+TTTBoard(){}
+void clearScreen();
+void drawBoard(string playername[]) const;
+void getPlay(string playername[]);
+int gameWon() const;
+};
+void TTTBoard :: clearScreen()
+{
+if (CLEAR_SCREEN) {
+
+cout << "\033c";
+}
+cout<<"\n\t\t **** Initial state *********\n\n";
+square[1] = 'a'; square[2] = 'b'; square[3] = 'c';
+square[4] = 'd'; square[5] = 'e'; square[6] = 'f';
+square[7] = 'g'; square[8] = 'h'; square[9] = 'i';
+getPlay(playername);
+
+}
+void TTTBoard :: getPlay(string playername[]){
+
+
+int player = 1,i;
+char position;
+char mark;
+do
+{
+drawBoard(playername);
+player=(player%2)?1:2;
+
+cout <<"\t\t "<<playername[player] << ", enter a position: ";
+cin >> position;
+
+//mark=(player == 1) ? 'X' : 'O';
+if(symbol[player] == 'X')
+mark = 'X';
+if(symbol[player] == 'O')
+mark = 'O';
+if ( position == 'a' && square[1] == 'a')
+
+square[1] = mark;
+else if (position == 'b' && square[2] == 'b')
+
+square[2] = mark;
+else if (position == 'c' && square[3] == 'c')
+
+square[3] = mark;
+else if (position =='d' && square[4] == 'd')
+
+square[4] = mark;
+else if (position == 'e' && square[5] == 'e')
+
+square[5] = mark;
+else if (position == 'f' && square[6] == 'f')
+
+square[6] = mark;
+else if (position == 'g' && square[7] == 'g')
+
+square[7] = mark;
+else if (position == 'h' && square[8] == 'h')
+
+square[8] = mark;
+else if (position == 'i' && square[9] == 'i')
+
+square[9] = mark;
+else
+{
+cout<<"\t\t\tInvalid move ";
+
+player--;
+cin.ignore();
+cin.get();
+}
+i = gameWon();
+
+player++;
+}while(i==-1);
+drawBoard(playername);
+if(i==1)
+
+cout<<"\a\t\t\tPlayer "<<playername[--player]<<" win ";
+else
+cout<<"\a\t\t\tGame Draw";
+cin.ignore();
+cin.get();
+}
+/*
+* FUNCTION TO RETURN GAME STATUS
+* 1 FOR GAME IS OVER WITH RESULT
+* -1 FOR GAME IS IN PROGRESS
+* O GAME IS OVER AND NO RESULT
+*/
+
+int TTTBoard :: gameWon() const
+{
+enum status {PLAYING, X_WINS=1, Y_WINS=1, TIE=-1, UNDEF};
+
+if (square[1] == square[2] && square[2] == square[3])
+
+return X_WINS;
+else if (square[4] == square[5] && square[5] == square[6])
+
+return X_WINS;
+else if (square[7] == square[8] && square[8] == square[9])
+
+return X_WINS;
+else if (square[1] == square[4] && square[4] == square[7])
+
+return X_WINS;
+else if (square[2] == square[5] && square[5] == square[8])
+
+return Y_WINS;
+else if (square[3] == square[6] && square[6] == square[9])
+
+return Y_WINS;
+else if (square[1] == square[5] && square[5] == square[9])
+
+return Y_WINS;
+else if (square[3] == square[5] && square[5] == square[7])
+
+return Y_WINS;
+else if (square[1] != 'a' && square[2] != 'b' && square[3] != 'c'
+&& square[4] != 'd' && square[5] != 'e' && square[6] != 'f'
+&& square[7] != 'g' && square[8] != 'h' && square[9] != 'i')
+
+return PLAYING;
+else
+return TIE;
+}
+
+/*
+* FUNCTION TO DRAW BOARD OF TIC TAC TOE WITH PLAYERS MARK
+*/
+
+
+void TTTBoard :: drawBoard(string playername[]) const
+{
+cout << "\n\n\t\t\t Tic Tac Toe\n\n";
+
+
+cout << "\t\t\t " << square[1] << " | " << square[2] << " | " << square[3] << endl;
+
+cout << "\t\t\t___|___|___" << endl;
+
+
+cout << "\t\t\t " << square[4] << " | " << square[5] << " | " << square[6] << endl;
+
+cout << "\t\t\t___|___|___" << endl;
+
+
+cout << "\t\t\t " << square[7] << " | " << square[8] << " | " << square[9] << endl;
+
+
+cout<<"\n\t\t\t"<<playername[1]<<" ("<<symbol[1]<<"), "<<playername[2]<<" ("<<symbol[2]<<")\n";
+cout << endl;
+}
+
+int main()
+{
+TTTBoard T;
+cout<<"\n\t\t *** WelCome *** \n\t\tEnter player names \n\t\t 1. "; cin>>playername[1];
+cout<<"\n\t\t 2. "; cin>>playername[2];
+cout<<"\n\t\t"<<playername[1]<<", Chose your Symbol : X or O \n\t\t\t";
+cin>>symbol[1];
+if(symbol[1] == 'X')
+symbol[2] = 'O';
+if(symbol[1] == 'O')
+symbol[2] = 'X';
+
+cout<<"\t\t"<<playername[2]<<", Your's Symbol : "<<symbol[2]<<"\n";
+T.getPlay(playername);
+char ch;
+do{
+cout<<"Do you want play more (Y/y)? : ";
+cin>>ch;
+if(ch!= 'Y' && ch!= 'y')
+return 0;
+T.clearScreen();
+}while(ch == 'Y' || ch == 'y');
+}
